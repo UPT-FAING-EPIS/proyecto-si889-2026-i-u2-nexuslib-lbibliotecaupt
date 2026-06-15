@@ -12,7 +12,21 @@
         </div>
 
         <div class="bg-slate-800 bg-opacity-50 border border-slate-700 rounded-lg p-8 shadow-xl">
-            <div id="saved-books-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+            <div class="mb-6">
+                <nav class="flex space-x-2" role="tablist" aria-label="Saved books tabs">
+                    <button id="tab-btn-all" type="button" class="px-4 py-2 rounded-md bg-slate-700 text-white font-medium" aria-selected="true">Todos los libros</button>
+                    <button id="tab-btn-collections" type="button" class="px-4 py-2 rounded-md text-slate-300 hover:bg-slate-700" aria-selected="false">Colecciones</button>
+                </nav>
+            </div>
+
+            <div id="tab-all-books" class="">
+                <div id="saved-books-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+                </div>
+            </div>
+
+            <div id="tab-collections" class="hidden">
+                <?php include 'collections.php'; ?>
+                <?php include 'collection_details.php'; ?>
             </div>
         </div>
 
@@ -163,3 +177,37 @@ window.addEventListener('pageshow', function(event) {
     if (event.persisted) { loadSavedBooks(); }
 });
 </script>
+
+<script>
+/* Tabs controller (separate from existing scripts) */
+(function(){
+    const btnAll = document.getElementById('tab-btn-all');
+    const btnCol = document.getElementById('tab-btn-collections');
+    const tabAll = document.getElementById('tab-all-books');
+    const tabCol = document.getElementById('tab-collections');
+
+    function setActive(active){
+        if(!tabAll || !tabCol || !btnAll || !btnCol) return;
+        if(active === 'all'){
+            tabAll.classList.remove('hidden'); tabAll.classList.add('block');
+            tabCol.classList.add('hidden'); tabCol.classList.remove('block');
+            btnAll.classList.add('bg-slate-700','text-white'); btnAll.classList.remove('text-slate-300');
+            btnCol.classList.remove('bg-slate-700','text-white'); btnCol.classList.add('text-slate-300');
+            btnAll.setAttribute('aria-selected','true'); btnCol.setAttribute('aria-selected','false');
+        } else {
+            tabAll.classList.add('hidden'); tabAll.classList.remove('block');
+            tabCol.classList.remove('hidden'); tabCol.classList.add('block');
+            btnCol.classList.add('bg-slate-700','text-white'); btnCol.classList.remove('text-slate-300');
+            btnAll.classList.remove('bg-slate-700','text-white'); btnAll.classList.add('text-slate-300');
+            btnAll.setAttribute('aria-selected','false'); btnCol.setAttribute('aria-selected','true');
+        }
+    }
+
+    if(btnAll && btnCol){
+        btnAll.addEventListener('click', function(){ setActive('all'); });
+        btnCol.addEventListener('click', async function(){ setActive('collections'); if (typeof loadUserCollections === 'function') await loadUserCollections(); });
+    }
+})();
+</script>
+
+<?php include __DIR__ . '/../layouts/collection_modals.php'; ?>

@@ -17,6 +17,8 @@
                 </svg>
                 <span class="btn-text font-medium text-sm md:text-base">Guardar Libro</span>
             </button>
+
+            
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -29,13 +31,19 @@
 
             <div class="lg:col-span-2 space-y-8">
                 
-                <div class="bg-slate-800 bg-opacity-50 border border-slate-700 rounded-lg p-8 shadow-md">
+                <div class="bg-slate-800 bg-opacity-50 border border-slate-700 rounded-lg p-8 shadow-md relative">
                     <h2 class="text-2xl font-bold text-white mb-8 flex items-center gap-3 border-b border-slate-700 pb-4">
                         <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
                         </svg>
                         Ficha Técnica del Catálogo
                     </h2>
+
+                    <button id="btn-copy-apa" class="absolute top-4 right-4 bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white p-2.5 rounded-xl border border-slate-700/60 transition-all shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 group" aria-label="Copiar cita (APA v7)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 transition-transform group-hover:scale-105">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 8.25V6a2.25 2.25 0 0 0-2.25-2.25H3.75A2.25 2.25 0 0 0 1.5 6v10.5A2.25 2.25 0 0 0 3.75 18.75h2.25m4.5-10.5H20.25a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25H10.5a2.25 2.25 0 0 1-2.25-2.25V10.5a2.25 2.25 0 0 1 2.25-2.25Z" />
+                        </svg>
+                    </button>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
                         <div>
@@ -166,6 +174,14 @@ window.toggleFavoriteDetailsUI = async function(button) {
 
         if (data.action === 'added') {
             window.setFavoriteDetailsState(button, true);
+            if (data.saved_book_id) {
+                window.currentSavedBookId = Number(data.saved_book_id);
+                const quickToast = document.getElementById('toast-quick-save');
+                if (quickToast) {
+                    quickToast.classList.remove('hidden');
+                    setTimeout(() => { quickToast.classList.add('hidden'); }, 4000);
+                }
+            }
         } else if (data.action === 'removed') {
             window.setFavoriteDetailsState(button, false);
         }
@@ -281,5 +297,87 @@ window.toggleFavoriteDetailsUI = async function(button) {
             document.getElementById('loading-spinner').classList.add('hidden');
             document.getElementById('content-container').classList.remove('hidden');
         });
+})();
+</script>
+
+<?php include __DIR__ . '/../layouts/collection_modals.php'; ?>
+
+<script>
+// Copy APA citation button logic
+(function(){
+    function extractText(id){ return document.getElementById(id)?.textContent?.trim() || ''; }
+
+    function extractYear(raw){ const m = String(raw||'').match(/(\d{4})/); return m ? m[1] : 's.f.'; }
+
+    function formatAuthors(raw){
+        if(!raw) return '';
+        // split by ' y ' or ','
+        const parts = raw.split(/\s+y\s+|,\s*/).map(s=>s.trim()).filter(Boolean);
+        const fmt = parts.map(name => {
+            const tokens = name.split(/\s+/).filter(Boolean);
+            if(tokens.length===1) return tokens[0];
+            const last = tokens.slice(-1).join(' ');
+            const initials = tokens.slice(0,-1).map(t=> t[0]?.toUpperCase() + '.').join(' ');
+            return `${last}, ${initials}`;
+        });
+        return fmt.join(', ');
+    }
+
+    function choosePublisher(editorial, origen){
+        editorial = (editorial||'').trim(); origen = (origen||'').trim();
+        if(editorial) return editorial;
+        if(/Inventario UPT|Biblioteca UPT/i.test(origen)) return 'Universidad Privada de Tacna';
+        return origen || 'Alpha Cloud';
+    }
+
+    const btn = document.getElementById('btn-copy-apa');
+    if(!btn) return;
+    const icon = document.getElementById('btn-copy-apa-icon');
+    btn.addEventListener('click', async function(){
+        const title = extractText('det-titulo');
+        const authorRaw = extractText('det-autor');
+        const yearRaw = extractText('det-ano-publicacion') || extractText('det-fecha');
+        const editorial = extractText('det-editorial');
+        const origen = extractText('det-origen');
+
+        const year = extractYear(yearRaw);
+        const authors = formatAuthors(authorRaw) || 'Autor desconocido';
+        const publisher = choosePublisher(editorial, origen);
+
+        const citation = `${authors} (${year}). ${title}. ${publisher}.`;
+        try{
+            await navigator.clipboard.writeText(citation);
+            // visual feedback
+            const oldHTML = btn.innerHTML;
+            const oldClasses = btn.className;
+            btn.innerHTML = '<span class="text-green-400 font-bold">✓</span>';
+            btn.classList.add('bg-green-600/20','text-green-400','border-green-500');
+            if(typeof window.showToast === 'function') window.showToast('Cita copiada en formato APA v7', 'success');
+            setTimeout(()=>{ btn.innerHTML = oldHTML; btn.className = oldClasses; }, 2000);
+        }catch(e){
+            try {
+                const textarea = document.createElement('textarea');
+                textarea.value = citation;
+                textarea.style.position = 'fixed';
+                textarea.style.left = '-9999px';
+                document.body.appendChild(textarea);
+                textarea.select();
+
+                const success = document.execCommand('copy');
+                document.body.removeChild(textarea);
+
+                if (!success) throw new Error('Fallback falló');
+
+                const oldHTML = btn.innerHTML;
+                const oldClasses = btn.className;
+                btn.innerHTML = '<span class="text-green-400 font-bold">✓</span>';
+                btn.classList.add('bg-green-600/20','text-green-400','border-green-500');
+                if(typeof window.showToast === 'function') window.showToast('Cita copiada en formato APA v7', 'success');
+                setTimeout(()=>{ btn.innerHTML = oldHTML; btn.className = oldClasses; }, 2000);
+            } catch (fallbackError) {
+                if(typeof window.showToast === 'function') window.showToast('No se pudo copiar la cita', 'error');
+            }
+        }
+    });
 })();
 </script>

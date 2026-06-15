@@ -408,6 +408,17 @@ if (strpos($view, 'admin/') === 0) {
 			});
 
 			if (response.ok) {
+				const respJson = await response.json().catch(() => ({}));
+				// expose saved_book_id for collection flows
+				if (respJson && respJson.saved_book_id) {
+					window.currentSavedBookId = Number(respJson.saved_book_id);
+					const quickToast = document.getElementById('toast-quick-save');
+					if (quickToast) {
+						quickToast.classList.remove('hidden');
+						setTimeout(() => { quickToast.classList.add('hidden'); }, 4000);
+					}
+				}
+
 				const icon = button.querySelector('.favorite-icon');
 				const isActive = button.dataset.favorited === 'true';
 
@@ -427,8 +438,19 @@ if (strpos($view, 'admin/') === 0) {
 					icon.classList.toggle('text-yellow-400', !isActive);
 				}
 
-				if (typeof window.showToast === 'function') {
-					window.showToast(!isActive ? 'Libro guardado en favoritos' : 'Libro removido de favoritos', 'success');
+				// Decide which toast to show:
+				const action = respJson && respJson.action ? String(respJson.action) : null;
+				if (action === 'removed') {
+					if (typeof window.showToast === 'function') {
+						window.showToast('Libro removido de favoritos', 'success');
+					}
+				} else if (action === 'added' && respJson && respJson.saved_book_id) {
+					// New quick-save flow already handled above; avoid showing legacy saved toast
+				} else {
+					// Fallback: show legacy toast according to toggled state
+					if (typeof window.showToast === 'function') {
+						window.showToast(!isActive ? 'Libro guardado en favoritos' : 'Libro removido de favoritos', 'success');
+					}
 				}
 			}
 		} catch (error) {

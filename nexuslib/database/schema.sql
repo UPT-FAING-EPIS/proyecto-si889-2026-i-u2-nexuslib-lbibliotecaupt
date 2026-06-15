@@ -34,14 +34,62 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `uuid` (`uuid`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla bd_nexus.accounts: ~4 rows (aproximadamente)
+-- Volcando datos para la tabla bd_nexus.accounts: ~15 rows (aproximadamente)
 INSERT INTO `accounts` (`id_user`, `uuid`, `name`, `email`, `password`, `role`, `status`, `verification_token`, `created_at`, `updated_at`) VALUES
 	(1, '473c33ee-5edf-11f1-bbb7-c87f545cda25', 'Leandro Hurtado', 'lhurtado@upt.pe', '$2y$10$kYuyB9/WZ1dyifBQLE/H.OoCmPv9YgV8XlA3hGQux0ULLYeZmdrke', 'user', 'active', NULL, '2026-06-03 00:00:49', '2026-06-03 00:00:49'),
-	(2, 'f352fe3f-5eee-11f1-bc7d-c87f545cda25', 'Usuario Admin', 'admin@gmail.com', '$2y$10$Ld.WYujlvDUJkmxZgBPreOfdlyxJehCztJ9Y2aDUNAZQwS3mIplBa', 'admin', 'active', NULL, '2026-06-03 01:53:00', '2026-06-04 21:01:46'),
+	(2, 'f352fe3f-5eee-11f1-bc7d-c87f545cda25', 'Usuario Admin', 'admin@gmail.com', '$2y$10$3fixmhoM1/OyrvuSNbLBLOltlSJBVAVnrNhZIyuj0ys2nOdTKhZJ6', 'admin', 'active', NULL, '2026-06-03 01:53:00', '2026-06-05 16:30:44'),
 	(3, 'f6be1846-5efb-11f1-bab4-c87f545cda25', 'User Test 2', 'usertest2@gmail.com', '$2y$10$XSGmuEUhbSbVgd5wABBSBemg/b0E4chtSalz7qToP6NuHoNfEE9cK', 'user', 'active', NULL, '2026-06-03 03:26:09', '2026-06-03 03:26:09'),
-	(4, '56a75155-5efc-11f1-bab4-c87f545cda25', 'User Test 3', 'usertest3@gmail.com', '$2y$10$YLWUuGmPjrlEQVL.j9INp.kqegtnvepVPjlysC6noPcQsyrIU4fD2', 'user', 'active', NULL, '2026-06-03 03:28:50', '2026-06-03 03:28:50');
+	(4, '56a75155-5efc-11f1-bab4-c87f545cda25', 'User Test 3', 'usertest3@gmail.com', '$2y$10$YLWUuGmPjrlEQVL.j9INp.kqegtnvepVPjlysC6noPcQsyrIU4fD2', 'user', 'active', NULL, '2026-06-03 03:28:50', '2026-06-03 03:28:50'),
+	(16, '04d3c94b-6129-11f1-85b9-7ced8da64325', 'Gino', 'flornavg12@gmail.com', '$2y$10$BiGjC5ofqAvyrWyMPaCx9.tQVFACLZ0uJ2MIL.fxmLOlaACFHRf8y', 'user', 'inactive', '3f0b80d5cf9ec7d7f8b3c07c3c395da02d3f5bb5b37312b19dbcd6013d683298', '2026-06-05 21:53:42', '2026-06-05 21:53:42'),
+	(17, '3671e2d5-6129-11f1-85b9-7ced8da64325', 'Eduardo Gino Flores Navarro ', 'edu883g@gmail.com', '$2y$10$rJwz5sAxhdCr/r0yEtJRPOuJPkHOMdWFiv.DJjRSLKMoD/4pJgF5m', 'user', 'active', NULL, '2026-06-05 21:55:05', '2026-06-05 21:55:46'),
+	(18, 'a7a6fb08-612b-11f1-85b9-7ced8da64325', 'Mariela Ramos Loza', 'maranyramos7@gmail.com', '$2y$10$5Zt65zjom0y3B2eDrurnbOH/VRBQ9wqNgnBeLL7Mo1irmgvbYemLm', 'user', 'inactive', 'b33b1a3fd8d8b01cbe3aeb94380501f01edd1b07679bf24bd558784c4005e270', '2026-06-05 22:12:34', '2026-06-05 22:12:34'),
+	(19, 'edf307cb-612b-11f1-85b9-7ced8da64325', 'Mariela Ramos Loza', 'mr2023077478@virtual.upt.pe', '$2y$10$zop89sCyhAoHOtWGk3Owbu.5dhKWiCpMeUlrYwWckISC7xU53MuQG', 'user', 'active', NULL, '2026-06-05 22:14:32', '2026-06-05 22:28:34'),
+	(20, '16ecc530-612f-11f1-85b9-7ced8da64325', 'Cintya Lisbeth Callomamani Laqui', 'cc2023076649@vietual.upt.pe', '$2y$10$80VCN3/jkxuxKfNFDxcs5uK5KbECnCJ8KsQ/FulAsPWeMQ6NM969m', 'user', 'inactive', '3d146924e0fbb083bd5e0f868ddc57f0d664a3f4aee6ca9404bf6d0fcc273b27', '2026-06-05 22:37:09', '2026-06-05 22:37:09'),
+	(21, '49c9a3d9-6410-11f1-8b99-7ced8da64325', 'EDUARDO', 'dinamarca378@gmail.com', '$2y$10$EfWu4XY23NXndp.XEpWhY.vixLZOhk7hBRuUW/vmyl3ycL11LVYVy', 'user', 'inactive', '329f396ce383485756bef9aba03c6773f46faecb9f99011e6a5480397d0af554', '2026-06-09 14:34:13', '2026-06-09 14:34:13'),
+	(22, '60c9dad0-6410-11f1-8b99-7ced8da64325', 'bryan', 'george.santiago2025@gmail.com', '$2y$10$Vsz1.rLXfsIjx.Fy57X9ruPtnHyu22Vo.l/GM6G91VqolyDrSK2cu', 'user', 'inactive', '1b24c52f0d090a6076b35f0b2b34c590387de7c48f420c5fbe5082d84524a3cb', '2026-06-09 14:34:51', '2026-06-09 14:34:51'),
+	(23, '771982d4-6410-11f1-8b99-7ced8da64325', 'alex', 'Luchogonza1321@gmail.com', '$2y$10$eJ2MCP.ayfXBnhAmoDFZa.49oEXuGBFkbOPijtnv0bwmfYzchCWrS', 'user', 'inactive', '370816932a1c4e8cc6c6bb77835585509ca57f41174808f21b3eda1444da13e3', '2026-06-09 14:35:29', '2026-06-09 14:35:29'),
+	(24, 'bde090e9-6429-11f1-8b99-7ced8da64325', 'piero calisaya', 'kanuro2004@gmail.com', '$2y$10$.9TEHnXj6jeieTTMYKNpnep30bEuPv6tknZeY9csj9gSrgrnFbrti', 'user', 'inactive', '02922641697d0813a01917ffd1de78480ebb7e616079b0478ae8745811358277', '2026-06-09 17:36:25', '2026-06-09 17:36:25'),
+	(25, 'bcbded03-650d-11f1-a288-7ced8da64325', 'SAMUEL', 'jc2023077283@virtual.upt.pe', '$2y$10$LNTOgxOj3XniKKRoVPYwHusX3ACf5MntCCtj76tiZOEVpb..8x89q', 'user', 'active', NULL, '2026-06-10 20:48:30', '2026-06-10 20:48:56'),
+	(27, 'f2118b12-6540-11f1-a288-7ced8da64325', 'Eduardo', 'ef2023076793@virtual.upt.pe', '$2y$10$XZAwY41jLO27icUaSkNJfubJHZseoCza1rRtZ7QhL7FmGAb60Ggra', 'user', 'active', NULL, '2026-06-11 02:55:03', '2026-06-11 02:55:27');
+
+-- Volcando estructura para tabla bd_nexus.collection_items
+CREATE TABLE IF NOT EXISTS `collection_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `collection_id` int(11) NOT NULL,
+  `saved_book_id` int(11) NOT NULL COMMENT 'Apunta al id de saved_books',
+  `added_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_collection_book` (`collection_id`,`saved_book_id`),
+  KEY `idx_collection_id` (`collection_id`),
+  KEY `idx_saved_book_id` (`saved_book_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Volcando datos para la tabla bd_nexus.collection_items: ~0 rows (aproximadamente)
+INSERT INTO `collection_items` (`id`, `collection_id`, `saved_book_id`, `added_at`) VALUES
+	(12, 10, 73, '2026-06-12 18:48:52'),
+	(17, 11, 73, '2026-06-12 18:59:18'),
+	(18, 11, 62, '2026-06-12 18:59:18'),
+	(20, 11, 56, '2026-06-12 19:12:19');
+
+-- Volcando estructura para tabla bd_nexus.collections
+CREATE TABLE IF NOT EXISTS `collections` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_uuid` char(36) NOT NULL COMMENT 'UUID del dueño de la colección',
+  `name` varchar(150) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_user_collections` (`user_uuid`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Volcando datos para la tabla bd_nexus.collections: ~0 rows (aproximadamente)
+INSERT INTO `collections` (`id`, `user_uuid`, `name`, `created_at`) VALUES
+	(7, '473c33ee-5edf-11f1-bbb7-c87f545cda25', 'test5', '2026-06-12 18:10:23'),
+	(8, '473c33ee-5edf-11f1-bbb7-c87f545cda25', 'test6', '2026-06-12 18:34:02'),
+	(10, '473c33ee-5edf-11f1-bbb7-c87f545cda25', 'test888', '2026-06-12 18:37:28'),
+	(11, '473c33ee-5edf-11f1-bbb7-c87f545cda25', 'test999', '2026-06-12 18:49:56'),
+	(12, '473c33ee-5edf-11f1-bbb7-c87f545cda25', 'test2026', '2026-06-12 18:56:57');
 
 -- Volcando estructura para tabla bd_nexus.inventory
 CREATE TABLE IF NOT EXISTS `inventory` (
@@ -57,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `inventory` (
   PRIMARY KEY (`registro`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla bd_nexus.inventory: ~42.205 rows (aproximadamente)
+-- Volcando datos para la tabla bd_nexus.inventory: ~41.554 rows (aproximadamente)
 INSERT INTO `inventory` (`registro`, `codigo`, `titulo`, `autor`, `biblioteca`, `tipo`, `procedencia`, `fecha`, `estado`) VALUES
 	(0, '10', '1', 'Ingenieria', 'Donación', '14/04/2008 7:37', '', '0000-00-00 00:00:00', 'Disponible'),
 	(1, '515/A65', 'Análisis Matemático 1: problemas resueltos', 'Arauzo B., Elmer', 'Ingenieria', 'Original', 'Desconocido', '0000-00-00 00:00:00', 'Disponible'),
@@ -8969,7 +9017,7 @@ INSERT INTO `inventory` (`registro`, `codigo`, `titulo`, `autor`, `biblioteca`, 
 	(9406, '004.21/P52/2000', 'Aplicaciones informáticas de gestión', 'Piattini Velthuis, Mario G.', 'Ingenieria', 'Original', 'Donación', '0000-00-00 00:00:00', 'Disponible'),
 	(9407, '004.678/P27', 'Internet explorer 5 ', 'Pascual, Francisco', 'Ingenieria', 'Original', 'Donación', '0000-00-00 00:00:00', 'Disponible'),
 	(9408, '004.019/T21', 'Creciendo en un Entorno Digital ; La generación Net', 'Tapscott, Don', 'Ingenieria', 'Original', 'Donación', '0000-00-00 00:00:00', 'Disponible'),
-	(9409, '005.113/L44', 'Aprendiendo JAVA 2', 'Lemay Laura', 'Ingenieria', 'Original', 'Donación', '0000-00-00 00:00:00', 'Disponible'),
+	(9409, '005.113/L44', 'Aprendiendo JAVA 2', 'Lemay Laura', 'Ingenieria', 'Original', 'Donación', '0000-00-00 00:00:00', 'Prestado'),
 	(9410, '005.369/R74', 'Office 2000', 'Rodríguez Almeida, Miguel A.', 'Ingenieria', 'Original', 'Donación', '0000-00-00 00:00:00', 'Disponible'),
 	(9411, '004.125/R74', 'Microprocesadores RISC; evolución y tendencias', 'Rodríguez, Clemente', 'Ingenieria', 'Original', 'Donación', '0000-00-00 00:00:00', 'Disponible'),
 	(9412, '621.319/S21', 'Sistemas electrónicos digitales', 'Sánchez López, Rafael', 'Ingenieria', 'Original', 'Donación', '0000-00-00 00:00:00', 'Disponible'),
@@ -42042,11 +42090,12 @@ CREATE TABLE IF NOT EXISTS `reserved_books` (
   `fecha_reserva` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_user_reserved` (`user_uuid`,`registro`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla bd_nexus.reserved_books: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla bd_nexus.reserved_books: ~2 rows (aproximadamente)
 INSERT INTO `reserved_books` (`id`, `user_uuid`, `codigo`, `registro`, `estado`, `fecha_reserva`) VALUES
-	(2, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '004.068/G63', 36471, 'Pendiente', '2026-06-03 13:50:53');
+	(2, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '004.068/G63', 36471, 'Pendiente', '2026-06-03 13:50:53'),
+	(14, 'f2118b12-6540-11f1-a288-7ced8da64325', '005.113/L44', 9409, 'Prestado', '2026-06-11 03:01:48');
 
 -- Volcando estructura para tabla bd_nexus.saved_books
 CREATE TABLE IF NOT EXISTS `saved_books` (
@@ -42059,14 +42108,45 @@ CREATE TABLE IF NOT EXISTS `saved_books` (
   `fecha_guardado` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_user_saved` (`user_uuid`,`codigo`,`origen`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla bd_nexus.saved_books: ~4 rows (aproximadamente)
+-- Volcando datos para la tabla bd_nexus.saved_books: ~26 rows (aproximadamente)
 INSERT INTO `saved_books` (`id`, `user_uuid`, `codigo`, `origen`, `titulo`, `portada_url`, `fecha_guardado`) VALUES
 	(11, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '45922', 'e-Libro', 'Sistemas SCADA', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/45922_25035017.png', '2026-06-03 13:17:14'),
 	(12, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '19058', 'Alpha Cloud', 'Fuera del sistema escolar', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2018/07/OChz6sWR7gy3cR9P/1556659101_cover.jpg', '2026-06-03 13:17:15'),
 	(13, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '41816', 'Inventario UPT', 'Abastecimiento y control patrimonial: Sistema Nacional de Abastecimiento, Gestión de Almacenes y Control Patrimonial de Bienes Estatales', NULL, '2026-06-03 13:17:17'),
-	(14, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '36471', 'Inventario UPT', 'Administración Avanzada de Sistemas Informáticos', NULL, '2026-06-03 13:50:50');
+	(23, '3671e2d5-6129-11f1-85b9-7ced8da64325', '19114', 'Alpha Cloud', 'Matemáticas discretas', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2018/07/UAQS26pKCJ1duKZJ/1556659114_cover.jpg', '2026-06-05 22:40:22'),
+	(24, '3671e2d5-6129-11f1-85b9-7ced8da64325', '639645', 'Alpha Cloud', 'Legislación y educación medioambiental', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2022/04/nSA6v07BQDbvMcdK/1650491301_cover.jpg', '2026-06-05 22:43:57'),
+	(25, '3671e2d5-6129-11f1-85b9-7ced8da64325', '51645', 'e-Libro', 'Bases de datos', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/51645_23220236.png', '2026-06-05 23:02:53'),
+	(26, '3671e2d5-6129-11f1-85b9-7ced8da64325', '73990', 'e-Libro', 'El matemático', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/73990_26031146.png', '2026-06-05 23:13:18'),
+	(27, '3671e2d5-6129-11f1-85b9-7ced8da64325', '39690', 'e-Libro', 'Medicina forense', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/39690_24223423.png', '2026-06-05 23:31:30'),
+	(28, '3671e2d5-6129-11f1-85b9-7ced8da64325', '289722', 'e-Libro', 'IA en el cumplimiento de TI', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/289722_17200011.png', '2026-06-06 00:11:34'),
+	(29, '3671e2d5-6129-11f1-85b9-7ced8da64325', '43257', 'e-Libro', 'Redes locales', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/43257_25013253.png', '2026-06-06 00:17:24'),
+	(30, '3671e2d5-6129-11f1-85b9-7ced8da64325', '35865', 'e-Libro', 'Tecnología de mataderos', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/35865_24192302.png', '2026-06-06 00:23:00'),
+	(32, '3671e2d5-6129-11f1-85b9-7ced8da64325', '81858', 'Alpha Cloud', 'La otra arquitectura moderna', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2020/10/rBFianhEWPpEyZ7U/1602258738_cover.jpg', '2026-06-06 01:00:46'),
+	(33, '3671e2d5-6129-11f1-85b9-7ced8da64325', '66578', 'e-Libro', 'El derecho y nosotros', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/66578_25210145.png', '2026-06-06 01:12:37'),
+	(34, '3671e2d5-6129-11f1-85b9-7ced8da64325', '121519', 'e-Libro', 'Internet de las cosas', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/121519_06230017.png', '2026-06-06 01:18:42'),
+	(35, '3671e2d5-6129-11f1-85b9-7ced8da64325', '40205', 'e-Libro', 'Derecho ambiental', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/40205_24230305.png', '2026-06-06 01:25:39'),
+	(36, '3671e2d5-6129-11f1-85b9-7ced8da64325', '49213', 'e-Libro', 'Didáctica de la tecnología', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/49213_25063146.png', '2026-06-06 01:55:05'),
+	(37, '3671e2d5-6129-11f1-85b9-7ced8da64325', '2251799825000607', 'Alpha Cloud', 'Arquitectura en prosa', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2023/06/qqzEy60aig9RM9Hy/1688568849_cover.jpg', '2026-06-06 01:57:08'),
+	(38, '3671e2d5-6129-11f1-85b9-7ced8da64325', '72672', 'e-Libro', 'Ensayos de arquitectura', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/72672_26020309.png', '2026-06-06 01:57:16'),
+	(39, '3671e2d5-6129-11f1-85b9-7ced8da64325', '1125899957001201', 'Alpha Cloud', 'Arana Orrego Torres. Historia de un emprendimiento', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2024/10/K8mez2RTb4XtFMud/87bcfcb6-ce93-4774-9ad9-807977a895fb_cover.jpg', '2026-06-06 01:57:19'),
+	(41, '3671e2d5-6129-11f1-85b9-7ced8da64325', '298017', 'e-Libro', 'Revolución artificial: aplicaciones basadas en inteligencia artificial', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/298017_12150017.png', '2026-06-09 22:09:26'),
+	(42, '3671e2d5-6129-11f1-85b9-7ced8da64325', '19357', 'Alpha Cloud', 'DOCKER', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2018/07/KCaQ4lr8pm9gLF28/1556659133_cover.jpg', '2026-06-09 22:16:51'),
+	(47, 'f2118b12-6540-11f1-a288-7ced8da64325', '50117', 'e-Libro', 'Estructuras de datos en Java', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/50117_25072006.png', '2026-06-11 03:00:26'),
+	(48, 'f2118b12-6540-11f1-a288-7ced8da64325', '2251799832000218', 'Alpha Cloud', 'Java 2', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2023/10/SoTJCFLNxWM7Bwop/1697118093_cover.jpg', '2026-06-11 03:01:01'),
+	(49, 'f2118b12-6540-11f1-a288-7ced8da64325', '9409', 'Inventario UPT', 'Aprendiendo JAVA 2', NULL, '2026-06-11 03:01:38'),
+	(50, 'f2118b12-6540-11f1-a288-7ced8da64325', '67059', 'Alpha Cloud', 'Python Práctico', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2020/06/RZuHA41FocejBKTv/1591723110512_cover.png', '2026-06-11 03:06:15'),
+	(55, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '53252', 'e-Libro', 'Aprende SQL', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/53252_25095309.png', '2026-06-12 18:08:19'),
+	(56, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '8990', 'Inventario UPT', 'A fondo SQL Server 7.0', NULL, '2026-06-12 18:08:20'),
+	(58, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '10178', 'Inventario UPT', 'Aplicando SQL Server 2000', NULL, '2026-06-12 18:08:24'),
+	(59, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '2251799817001729', 'Alpha Cloud', 'Matemática educativa', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2022/11/H4OsgTvmJakiN0xd/1669395956_cover.jpg', '2026-06-12 18:08:36'),
+	(60, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '2251799816003222', 'Alpha Cloud', 'Matemática educativa', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2022/10/V3juLsMnZvB0UNLj/cddf6b6c-88d4-4cdd-8259-e2e856b83dae_cover.jpg', '2026-06-12 18:08:40'),
+	(61, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '37796', 'e-Libro', 'Lo imposible en matemáticas', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/37796_24210239.png', '2026-06-12 18:08:42'),
+	(62, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '13249', 'Inventario UPT', '1000 Problemas Resueltos de Matemática ; Geometría Trigonometría', NULL, '2026-06-12 18:08:43'),
+	(64, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '639924', 'Alpha Cloud', 'Cloud: herramientas para trabajar en la nube', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2022/04/LegZdaZddp7Qw2eu/1650901420_cover.jpg', '2026-06-12 18:33:30'),
+	(69, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '106413', 'e-Libro', 'Creación de un portal con PHP y MySQL', 'https://df5kbf1hky40.cloudfront.net/content/book_covers/106413_27051022.png', '2026-06-12 18:36:02'),
+	(73, '473c33ee-5edf-11f1-bbb7-c87f545cda25', '253033', 'Alpha Cloud', 'El sistema en crisis', 'https://storage-aws-production.publica.la/biblioteca-virtual-alfaomega/issues/2021/02/2Gqsp2EPNRHIm06S/1612798735_cover.jpg', '2026-06-12 18:48:37');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

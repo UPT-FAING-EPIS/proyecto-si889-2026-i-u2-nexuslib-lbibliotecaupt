@@ -190,8 +190,151 @@ if (preg_match('#^/api/admin/(saved|reserved)$#', $path, $m)) {
 	return;
 }
 
-// Buscamos la palabra 'api/' seguida de dos bloques de texto (servicio y endpoint)
-if (preg_match('/\/api\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)/', $path, $matches)) {
+// (Generic API handler removed from here and moved to file end to avoid
+// intercepting more specific routes defined below.)
+
+// Forward user-library collections endpoints (support nested /collections and /collections/items)
+if (preg_match('#^/api/user-library/collections(?:/items)?$#', $path)) {
+	$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+	$services = require __DIR__ . '/../Config/services.php';
+	if (!isset($services['user-library'])) {
+		http_response_code(500);
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode(['error' => 'user-library service not configured'], JSON_UNESCAPED_UNICODE);
+		return;
+	}
+
+	$base = rtrim($services['user-library'], '/');
+	// Preserve the trailing subpath (collections or collections/items)
+	$subpath = ltrim(substr($path, strlen('/api/user-library/')), '/');
+	$targetUrl = $base . '/' . $subpath;
+
+	// preserve query string if present
+	$qs = (string) ($_SERVER['QUERY_STRING'] ?? '');
+	if ($qs !== '') $targetUrl .= (strpos($targetUrl, '?') === false ? '?' : '&') . $qs;
+
+	$allHeaders = function_exists('getallheaders') ? getallheaders() : [];
+	$hdrs = [];
+	if (is_array($allHeaders)) {
+		foreach ($allHeaders as $k => $v) {
+			if (is_int($k)) $hdrs[] = $v; else $hdrs[$k] = $v;
+		}
+	}
+
+	$body = file_get_contents('php://input');
+	$resp = $forwarder->forward($method, $targetUrl, $hdrs, $body);
+
+	http_response_code((int)$resp['status']);
+	$hopByHop = [
+		'Connection', 'Keep-Alive', 'Proxy-Authenticate', 'Proxy-Authorization', 'TE', 'Trailers', 'Transfer-Encoding', 'Upgrade', 'Content-Length'
+	];
+	if (!empty($resp['headers']) && is_array($resp['headers'])) {
+		foreach ($resp['headers'] as $name => $values) {
+			if (in_array($name, $hopByHop, true)) continue;
+			foreach ($values as $val) {
+				header($name . ': ' . $val, false);
+			}
+		}
+	}
+
+	echo $resp['body'];
+	return;
+}
+
+// Forward available-books endpoint for user-library collections
+if (preg_match('#^/api/user-library/collections/available-books$#', $path)) {
+	$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+	$services = require __DIR__ . '/../Config/services.php';
+	if (!isset($services['user-library'])) {
+		http_response_code(500);
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode(['error' => 'user-library service not configured'], JSON_UNESCAPED_UNICODE);
+		return;
+	}
+
+	$base = rtrim($services['user-library'], '/');
+	$targetUrl = $base . '/collections/available-books';
+
+	// preserve query string
+	$qs = (string) ($_SERVER['QUERY_STRING'] ?? '');
+	if ($qs !== '') $targetUrl .= (strpos($targetUrl, '?') === false ? '?' : '&') . $qs;
+
+	$allHeaders = function_exists('getallheaders') ? getallheaders() : [];
+	$hdrs = [];
+	if (is_array($allHeaders)) {
+		foreach ($allHeaders as $k => $v) {
+			if (is_int($k)) $hdrs[] = $v; else $hdrs[$k] = $v;
+		}
+	}
+
+	$body = file_get_contents('php://input');
+	$resp = $forwarder->forward($method, $targetUrl, $hdrs, $body);
+
+	http_response_code((int)$resp['status']);
+	$hopByHop = [
+		'Connection', 'Keep-Alive', 'Proxy-Authenticate', 'Proxy-Authorization', 'TE', 'Trailers', 'Transfer-Encoding', 'Upgrade', 'Content-Length'
+	];
+	if (!empty($resp['headers']) && is_array($resp['headers'])) {
+		foreach ($resp['headers'] as $name => $values) {
+			if (in_array($name, $hopByHop, true)) continue;
+			foreach ($values as $val) {
+				header($name . ': ' . $val, false);
+			}
+		}
+	}
+
+	echo $resp['body'];
+	return;
+}
+
+// Forward update endpoint for user-library collections (rename)
+if (preg_match('#^/api/user-library/collections/update$#', $path)) {
+	$method = $_SERVER['REQUEST_METHOD'] ?? 'POST';
+	$services = require __DIR__ . '/../Config/services.php';
+	if (!isset($services['user-library'])) {
+		http_response_code(500);
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode(['error' => 'user-library service not configured'], JSON_UNESCAPED_UNICODE);
+		return;
+	}
+
+	$base = rtrim($services['user-library'], '/');
+	$targetUrl = $base . '/collections/update';
+
+	// preserve query string
+	$qs = (string) ($_SERVER['QUERY_STRING'] ?? '');
+	if ($qs !== '') $targetUrl .= (strpos($targetUrl, '?') === false ? '?' : '&') . $qs;
+
+	$allHeaders = function_exists('getallheaders') ? getallheaders() : [];
+	$hdrs = [];
+	if (is_array($allHeaders)) {
+		foreach ($allHeaders as $k => $v) {
+			if (is_int($k)) $hdrs[] = $v; else $hdrs[$k] = $v;
+		}
+	}
+
+	$body = file_get_contents('php://input');
+	$resp = $forwarder->forward($method, $targetUrl, $hdrs, $body);
+
+	http_response_code((int)$resp['status']);
+	$hopByHop = [
+		'Connection', 'Keep-Alive', 'Proxy-Authenticate', 'Proxy-Authorization', 'TE', 'Trailers', 'Transfer-Encoding', 'Upgrade', 'Content-Length'
+	];
+	if (!empty($resp['headers']) && is_array($resp['headers'])) {
+		foreach ($resp['headers'] as $name => $values) {
+			if (in_array($name, $hopByHop, true)) continue;
+			foreach ($values as $val) {
+				header($name . ': ' . $val, false);
+			}
+		}
+	}
+
+	echo $resp['body'];
+	return;
+}
+
+// Generic API handler: match exactly two segments `/api/{service}/{endpoint}`
+if (preg_match('#^/api/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)$#', $path, $matches)) {
 	$service = $matches[1];
 	$endpoint = $matches[2];
 

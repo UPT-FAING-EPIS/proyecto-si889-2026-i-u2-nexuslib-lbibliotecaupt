@@ -46,7 +46,9 @@ class LibraryController
 			return;
 		}
 
-		$this->jsonResponse($result, 200);
+		// If the action was an insert, respond with 201 Created and include saved_book_id
+		$status = (isset($result['action']) && $result['action'] === 'added') ? 201 : 200;
+		$this->jsonResponse($result, $status);
 	}
 
 	public function getSaved(): void

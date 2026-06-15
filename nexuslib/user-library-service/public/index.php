@@ -5,13 +5,15 @@ require_once __DIR__ . '/../app/Models/SavedBook.php';
 require_once __DIR__ . '/../app/Models/ReservedBook.php';
 require_once __DIR__ . '/../app/Repositories/LibraryRepositoryInterface.php';
 require_once __DIR__ . '/../app/Repositories/LibraryRepository.php';
+require_once __DIR__ . '/../app/Repositories/CollectionsRepository.php';
 require_once __DIR__ . '/../app/Services/SavedBooksService.php';
 require_once __DIR__ . '/../app/Services/ReservationService.php';
 require_once __DIR__ . '/../app/Controllers/LibraryController.php';
+require_once __DIR__ . '/../app/Controllers/CollectionsController.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
@@ -22,9 +24,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
 try {
 	$pdo = Database::getConnection();
 	$repository = new LibraryRepository($pdo);
-	$savedBooksService = new SavedBooksService($repository);
+	$collectionsRepo = new CollectionsRepository($pdo);
+	$savedBooksService = new SavedBooksService($repository, $collectionsRepo);
 	$reservationService = new ReservationService($repository);
 	$controller = new LibraryController($savedBooksService, $reservationService);
+	$collectionsController = new CollectionsController($savedBooksService);
 
 	$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
 
@@ -53,6 +57,74 @@ try {
 			case 'cancel':
 				$controller->cancel();
 				exit;
+		}
+	}
+
+	// Collections endpoints: /collections and /collections/items
+
+	// Collections update endpoint: /collections/update
+	if (preg_match('#/collections/update$#', $uri)) {
+		switch ($_SERVER['REQUEST_METHOD'] ?? 'GET') {
+			case 'POST':
+				$collectionsController->update();
+				exit;
+			default:
+				http_response_code(405);
+				echo json_encode(['error' => 'Method not allowed'], JSON_UNESCAPED_UNICODE);
+				exit;
+		}
+	}
+
+	// /collections/available-books -> list saved_books not yet in the collection
+	if (preg_match('#/collections/available-books$#', $uri)) {
+		switch ($_SERVER['REQUEST_METHOD'] ?? 'GET') {
+			case 'GET':
+				$collectionsController->getAvailableBooks();
+				exit;
+			default:
+				http_response_code(405);
+				echo json_encode(['error' => 'Method not allowed'], JSON_UNESCAPED_UNICODE);
+				exit;
+		}
+	}
+
+	if (preg_match('#/collections(?:/items)?$#', $uri)) {
+		// /collections/items -> add/remove
+		if (preg_match('#/collections/items$#', $uri)) {
+			switch ($_SERVER['REQUEST_METHOD'] ?? 'GET') {
+				case 'GET':
+					$collectionsController->getItems();
+					exit;
+				case 'POST':
+					$collectionsController->addItem();
+					exit;
+				case 'DELETE':
+					$collectionsController->removeItem();
+					exit;
+				default:
+					http_response_code(405);
+					echo json_encode(['error' => 'Method not allowed'], JSON_UNESCAPED_UNICODE);
+					exit;
+			}
+		}
+
+		// /collections -> create, list, delete
+		if (preg_match('#/collections$#', $uri)) {
+			switch ($_SERVER['REQUEST_METHOD'] ?? 'GET') {
+				case 'POST':
+					$collectionsController->create();
+					exit;
+				case 'GET':
+					$collectionsController->getCollections();
+					exit;
+				case 'DELETE':
+					$collectionsController->delete();
+					exit;
+				default:
+					http_response_code(405);
+					echo json_encode(['error' => 'Method not allowed'], JSON_UNESCAPED_UNICODE);
+					exit;
+			}
 		}
 	}
 
