@@ -27,6 +27,7 @@ Integrantes:
 | 1.0 | LDHO | LDHO | LDHO | 17/04/2026 | Versión Original |
 | 2.0 | LDHO | LDHO | LDHO | 19/04/2026 | Versión 2.0 |
 | 3.0 | LDHO | LDHO | LDHO | 08/06/2026 | Versión 3.0 |
+| 4.0 | LDHO | LDHO | LDHO | 18/06/2026 | Versión 4.0 |
 
 # 
 
@@ -56,7 +57,7 @@ Integrantes:
 
 # 
 
-**Versión *3.0***
+**Versión *4.0***
 
 | CONTROL DE VERSIONES |  |  |  |  |  |
 | :---: | :---: | :---: | :---: | :---: | ----- |
@@ -64,6 +65,7 @@ Integrantes:
 | 1.0 | LDHO | LDHO | LDHO | 17/04/2026 | Versión Original |
 | 2.0 | LDHO | LDHO | LDHO | 19/04/2026 | Versión 2.0 |
 | 3.0 | LDHO | LDHO | LDHO | 08/06/2026 | Versión 3.0 |
+| 4.0 | LDHO | LDHO | LDHO | 18/06/2026 | Versión 4.0 |
 
 **ÍNDICE GENERAL**
 
@@ -226,7 +228,7 @@ Para que el diseño de NexusLib fuera preciso, recolectamos datos directamente d
 | **RF-05** | Acceso digital | El buscador debe proporcionar enlaces directos para la visualización o descarga de materiales en formato de libros digitales cuando las plataformas de origen lo permitan. |
 | **RF-06** | Gestión de Administrador | El sistema debe habilitar un módulo centralizado para el perfil administrativo que permita: la gestión de usuarios, administrar el inventario UPT (revisar los registros de un libro y cambiar su estado de disponibilidad), y visualizar exclusivamente (modo lectura) los registros de libros guardados y las reservas de los usuarios. |
 | **RF-07** | Autenticación y Registro | El sistema debe permitir a los usuarios registrarse e iniciar sesión de forma segura, controlando las sesiones mediante tokens para habilitar el acceso a su espacio personal. |
-| **RF-08** | Módulo de Libros Guardados | La plataforma debe permitir a los usuarios autenticados almacenar y organizar los libros físicos o digitales de su interés en una lista de favoritos dentro de su Dashboard. |
+| **RF-08** | Módulo de Libros Guardados | La plataforma debe permitir a los usuarios autenticados almacenar libros físicos o digitales de su interés dentro de su espacio personal, proporcionando la capacidad de crear, gestionar y clasificar dichos recursos en carpetas o colecciones personalizadas accesibles dinámicamente desde su Dashboard. |
 | **RF-09** | Módulo de Reservas | El software debe permitir a los usuarios autenticados solicitar la reserva de libros físicos con stock disponible, mostrando el estado del trámite en su panel personal. |
 
 ## **c) Reglas de Negocio** {#c)-reglas-de-negocio}
@@ -391,16 +393,17 @@ Para que el diseño de NexusLib fuera preciso, recolectamos datos directamente d
 | ----- | ----- |
 | **Tipo** | Obligatorio |
 | **Actores** | Usuario, Sistema NexusLib. |
-| **Descripción** | Permite a los usuarios autenticados almacenar y organizar los libros físicos o digitales de su interés en una lista de favoritos dentro de su Dashboard. El sistema interactúa con el microservicio encargado de administrar las colecciones personales para persistir las referencias de forma única por cada cuenta de usuario. |
-| **Historia de Usuario** | Como usuario, quiero guardar libros de mi interés en una lista de favoritos dentro de mi Dashboard, para poder acceder a sus fichas técnicas rápidamente en el futuro sin tener que realizar todo el proceso de búsqueda nuevamente. |
-| **Escenario (Gherkin)** | **Dado** que el usuario ha iniciado sesión en el sistema y se encuentra visualizando la ficha de detalles de un libro, **Cuando** hace clic en el botón "Guardar en Favoritos", **Entonces** el sistema debe registrar la referencia del libro en su espacio personal, alternar el estado del botón visual a "Guardado" y desplegar el recurso dentro de la grilla de textos guardados del panel de control. |
+| **Descripción** | Permite a los usuarios autenticados almacenar y organizar los libros físicos o digitales de su interés en carpetas o colecciones personalizadas dentro de su Dashboard. El sistema interactúa con el microservicio encargado de administrar las colecciones personales para persistir las referencias de forma única por cada cuenta de usuario. |
+| **Historia de Usuario** | Como usuario, quiero guardar libros de mi interés y organizarlos en colecciones dentro de mi Dashboard, para poder acceder a sus fichas técnicas rápidamente en el futuro sin tener que realizar todo el proceso de búsqueda nuevamente. |
+| **Escenario (Gherkin)** | **Dado** que el usuario ha iniciado sesión en el sistema y se encuentra visualizando la ficha de detalles de un libro, **Cuando** hace clic en el botón "Guardar en Favoritos", **Entonces** el sistema debe registrar la referencia del libro en su espacio personal, alternar el estado del botón visual a "Guardado" y habilitar el recurso para su asignación dentro de las carpetas organizacionales del panel de control. |
 | **Precondiciones** | El usuario debe estar correctamente autenticado mediante un token de sesión válido y el microservicio encargado (user-library-service) debe estar en comunicación directa con la base de datos de persistencia. |
 | **Narrativa de cada de uso** |  |
 | **Acción del usuario** | **Respuesta del sistema** |
 | **1\.** El usuario hace clic en el botón "Guardar en Favoritos" situado en la sección de detalles de un libro físico o digital.  | **2\.** El sistema (gateway-service) intercepta la petición, verifica la validez del token de sesión del cliente y transmite los datos de la solicitud al microservicio de biblioteca de usuario (user-library-service). |
 |  | **3\.** El sistema ejecuta la inserción del identificador del recurso junto con el ID del usuario en la tabla de almacenamiento correspondiente en MySQL.  |
 |  | **4\.** El sistema confirma el éxito de la operación al frontend y actualiza dinámicamente la interfaz, cambiando el estado visual del botón a "Guardado" para evitar duplicados.  |
-| **5\.** El usuario ingresa a la pestaña de "Libros Guardados" dentro de su Dashboard personal.  | **6\.** El sistema consulta las referencias indexadas del usuario en la base de datos y renderiza la colección de favoritos en una grilla interactiva, habilitando accesos rápidos a las fichas técnicas y la opción de remover libros de la lista.  |
+| **5\.** El usuario ingresa a la pestaña de "Libros Guardados" dentro de su Dashboard personal.  | **6\.** El sistema consulta las referencias indexadas del usuario en la base de datos y renderiza la colección de favoritos y sus carpetas organizacionales en una grilla interactiva, habilitando accesos rápidos a las fichas técnicas y la opción de remover libros de la lista. |
+| **7\.** El usuario crea una nueva colección u organiza sus libros guardados dentro de las carpetas personalizadas mediante modales interactivos. | **8\.** El sistema procesa de forma asíncrona la vinculación relacional en la tabla intermedia de la base de datos, actualiza dinámicamente los elementos de la interfaz y ejecuta una limpieza en cascada si un recurso principal es eliminado de favoritos. |
 
 **Narrativa de CU09 \- Módulo de Reservas**
 
