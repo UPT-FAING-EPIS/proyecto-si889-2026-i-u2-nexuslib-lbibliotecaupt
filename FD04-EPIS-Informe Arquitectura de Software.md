@@ -26,6 +26,7 @@ Integrantes:
 | Versión | Hecha por | Revisada por | Aprobada por | Fecha | Motivo |
 | 1.0 | EGFN-JSCM | EGFN-JSCM | LDHO | 20/04/2026 | Versión Original |
 | 2.0 | LDHO | LDHO | LDHO | 09/06/2026 | Versión 2.0 |
+| 3.0 | LDHO | LDHO | LDHO | 18/06/2026 | Versión 3.0 |
 
 # 
 
@@ -49,13 +50,14 @@ Integrantes:
 
 # 
 
-# **Versión 2.0**
+# **Versión 3.0**
 
 | CONTROL DE VERSIONES |  |  |  |  |  |
 | :---: | :---: | :---: | :---: | :---: | ----- |
 | Versión | Hecha por | Revisada por | Aprobada por | Fecha | Motivo |
 | 1.0 | EGFN-JSCM | EGFN-JSCM | LDHO | 20/04/2026 | Versión Original |
 | 2.0 | LDHO | LDHO | LDHO | 09/06/2026 | Versión 2.0 |
+| 3.0 | LDHO | LDHO | LDHO | 18/06/2026 | Versión 3.0 |
 
 **ÍNDICE GENERAL**
 
@@ -171,7 +173,7 @@ El alcance de este informe abarca el diseño técnico y la interacción de los 6
 | **RF-05** | Acceso digital | El buscador debe proporcionar enlaces directos para la visualización o descarga de materiales en formato de libros digitales cuando las plataformas de origen lo permitan. |
 | **RF-06** | Gestión de Administrador | El sistema debe habilitar un módulo centralizado para el perfil administrativo que permita: la gestión de usuarios, administrar el inventario UPT (revisar los registros de un libro y cambiar su estado de disponibilidad), y visualizar exclusivamente (modo lectura) los registros de libros guardados y las reservas de los usuarios. |
 | **RF-07** | Autenticación y Registro | El sistema debe permitir a los usuarios registrarse e iniciar sesión de forma segura, controlando las sesiones mediante tokens para habilitar el acceso a su espacio personal. |
-| **RF-08** | Módulo de Libros Guardados | La plataforma debe permitir a los usuarios autenticados almacenar y organizar los libros físicos o digitales de su interés en una lista de favoritos dentro de su Dashboard. |
+| **RF-08** | Módulo de Libros Guardados | La plataforma debe permitir a los usuarios autenticados almacenar libros físicos o digitales de su interés dentro de su espacio personal, proporcionando la capacidad de crear, gestionar y clasificar dichos recursos en carpetas o colecciones personalizadas accesibles dinámicamente desde su Dashboard. |
 | **RF-09** | Módulo de Reservas | El software debe permitir a los usuarios autenticados solicitar la reserva de libros físicos con stock disponible, mostrando el estado del trámite en su panel personal. |
 
 ## **2.1.2. Requerimientos No Funcionales – Atributos de Calidad** {#2.1.2.-requerimientos-no-funcionales-–-atributos-de-calidad}
