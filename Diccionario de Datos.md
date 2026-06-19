@@ -27,18 +27,19 @@ Integrantes:
 
 # 
 
-# **Versión 1.0**
+# **Versión 2.0**
 
 **ÍNDICE GENERAL**
 
-Contenido  
-[**1\. Modelo Entidad / relación**	4](#1.-modelo-entidad-/-relación)
+Contenido
+
+[**1\. Modelo Entidad / relación	4**](#1.-modelo-entidad-/-relación)
 
 [1.1. Diseño lógico	4](#1.1.-diseño-lógico)
 
 [1.2. Diseño Físico	4](#1.2.-diseño-físico)
 
-[**2\. DICCIONARIO DE DATOS**	5](#2.-diccionario-de-datos)
+[**2\. DICCIONARIO DE DATOS	5**](#2.-diccionario-de-datos)
 
 [2.1. Tablas	5](#2.1.-tablas)
 
@@ -50,9 +51,13 @@ Contenido
 
 [Tabla: reserved\_books	10](#tabla:-reserved_books)
 
-[2.2. Lenguaje de Definición de Datos (DDL)	11](#2.2.-lenguaje-de-definición-de-datos-\(ddl\))
+[Tabla: collections	11](#tabla:-collections)
 
-[2.3. Lenguaje de Manipulación de Datos (DML)	13](#2.3.-lenguaje-de-manipulación-de-datos-\(dml\))
+[Tabla: collection\_items	12](#tabla:-collection_items)
+
+[2.2. Lenguaje de Definición de Datos (DDL)	13](#2.2.-lenguaje-de-definición-de-datos-\(ddl\))
+
+[2.3. Lenguaje de Manipulación de Datos (DML)	15](#2.3.-lenguaje-de-manipulación-de-datos-\(dml\))
 
 **Diccionario de Datos**
 
@@ -61,12 +66,10 @@ Contenido
 ## **1.1. Diseño lógico** {#1.1.-diseño-lógico}
 
 ![diagrama_logico](media/diccionario/diagrama_logico.png)
-*Figura N°1: Diagrama del Diseño Logico*
 
 ## 1.2. **Diseño Físico** {#1.2.-diseño-físico}
 
 ![diagrama_fisico](media/diccionario/diagrama_fisico.png)
-*Figura N°2: Diagrama de Diseño Físico*
 
 # **2\. DICCIONARIO DE DATOS** {#2.-diccionario-de-datos}
 
@@ -152,150 +155,254 @@ Contenido
 | 5 | estado | VARCHAR | 50 | Sí | No | No | Estado operativo del trámite de la reserva (ej. 'Pendiente', 'Entregado', 'Cancelado'). |
 | 6 | fecha\_reserva | DATETIME | \- | Sí | No | No | Fecha y hora del servidor en la que se consolidó de manera exitosa la solicitud de separación física. |
 
+### **Tabla: collections** {#tabla:-collections}
+
+| Nombre de la Tabla: | collections |
+| :---- | :---- |
+| **Nombres de la Tabla:** | Colecciones Personalizadas / Carpetas |
+| **Descripción de la Tabla:** | Almacena la estructura de las carpetas o agrupaciones creadas de forma personalizada por los usuarios para organizar sus marcadores bibliográficos. |
+| **Objetivo:** | Proporcionar la capacidad de categorizar y segmentar los libros favoritos en el Dashboard según las necesidades académicas individuales de cada alumno de manera desacoplada. |
+| **Relaciones con otras tablas:** | Relacionada de manera lógica con la tabla accounts mediante el campo user\_uuid, y con la tabla intermedia collection\_items mediante su clave primaria id. |
+
+| Nr. | Nombre del campo | Tipo de dato | Longitud | Permite nulos | Clave primaria | Clave foránea | Descripción del campo |
+| :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+| **1** | id | INT | 11 | No | Sí | No | Identificador numérico correlativo autoincremental de control interno de la colección. |
+| **2** | user\_uuid | CHAR | 36 | No | No | Sí (accounts) | UUID del propietario de la colección, utilizado como enlace lógico entre microservicios. |
+| **3** | name | VARCHAR | 150 | No | No | No | Nombre descriptivo asignado por el usuario para rotular su carpeta personalizada. |
+| **4** | created\_at | DATETIME | \- | Sí | No | No | Fecha y hora del servidor en la que el usuario registró la nueva colección. |
+
+### **Tabla: collection\_items** {#tabla:-collection_items}
+
+| Nombre de la Tabla: | collection\_items |
+| :---- | :---- |
+| **Nombres de la Tabla:** | Ítems de Colecciones / Enlaces Relacionales |
+| **Descripción de la Tabla:** | Tabla asociativa intermedia encargada de romper la relación de muchos a muchos ($M:N$) existente entre las carpetas personalizadas y los libros guardados. |
+| **Objetivo:** | Gestionar el catálogo interno de recursos vinculados a cada carpeta, asegurando la integridad referencial y aplicando restricciones de unicidad complejas para evitar la duplicidad de un libro en una misma colección. |
+| **Relaciones con otras tablas:** | Relacionada de manera lógica con la tabla collections mediante collection\_id y con la tabla saved\_books a través del campo común saved\_book\_id. |
+
+| Nr. | Nombre del campo | Tipo de dato | Longitud | Permite nulos | Clave primaria | Clave foránea | Descripción del campo |
+| :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+| **1** | id | INT | 11 | No | Sí | No | Identificador numérico correlativo autoincremental único de control de la relación. |
+| **2** | collection\_id | INT | 11 | No | No | Sí (collections) | ID de la colección o carpeta contenedora del recurso, sirviendo como enlace relacional. |
+| **3** | saved\_book\_id | INT | 11 | No | No | Sí (saved\_books) | ID del libro guardado en favoritos que se está asociando a una carpeta específica. |
+| **4** | added\_at | DATETIME | \- | Sí | No | No | Fecha y hora del servidor en la que se consolidó la vinculación física del ítem. |
+
 ## 2.2. **Lenguaje de Definición de Datos (DDL)** {#2.2.-lenguaje-de-definición-de-datos-(ddl)}
 
-CREATE DATABASE IF NOT EXISTS \`bd\_nexus\` /\*\!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4\_general\_ci \*/;  
-USE \`bd\_nexus\`;
+```sql
+CREATE DATABASE IF NOT EXISTS `bd_nexus` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+USE `bd_nexus`;
 
-CREATE TABLE IF NOT EXISTS \`accounts\` (  
-  \`id\_user\` int(11) NOT NULL AUTO\_INCREMENT,  
-  \`uuid\` char(36) NOT NULL COMMENT 'Identificador único universal para los microservicios',  
-  \`name\` varchar(100) NOT NULL,  
-  \`email\` varchar(150) NOT NULL,  
-  \`password\` varchar(255) NOT NULL,  
-  \`role\` enum('user','admin') NOT NULL DEFAULT 'user',  
-  \`status\` enum('active','inactive') NOT NULL DEFAULT 'inactive',  
-  \`verification\_token\` varchar(128) DEFAULT NULL,  
-  \`created\_at\` timestamp NOT NULL DEFAULT current\_timestamp(),  
-  \`updated\_at\` timestamp NOT NULL DEFAULT current\_timestamp() ON UPDATE current\_timestamp(),  
-  PRIMARY KEY (\`id\_user\`),  
-  UNIQUE KEY \`uuid\` (\`uuid\`),  
-  UNIQUE KEY \`email\` (\`email\`)  
-) ENGINE=InnoDB AUTO\_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4\_unicode\_ci;
+CREATE TABLE IF NOT EXISTS `accounts` (
+  `id_user` int(11) NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) NOT NULL COMMENT 'Identificador único universal para los microservicios',
+  `name` varchar(100) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('user','admin') NOT NULL DEFAULT 'user',
+  `status` enum('active','inactive') NOT NULL DEFAULT 'inactive',
+  `verification_token` varchar(128) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id_user`),
+  UNIQUE KEY `uuid` (`uuid`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS \`inventory\` (  
-  \`registro\` int(11) NOT NULL,  
-  \`codigo\` varchar(100) DEFAULT NULL,  
-  \`titulo\` text NOT NULL,  
-  \`autor\` varchar(255) DEFAULT NULL,  
-  \`biblioteca\` varchar(100) DEFAULT NULL,  
-  \`tipo\` varchar(50) DEFAULT NULL,  
-  \`procedencia\` varchar(50) DEFAULT NULL,  
-  \`fecha\` datetime DEFAULT NULL,  
-  \`estado\` varchar(20) DEFAULT 'Disponible',  
-  PRIMARY KEY (\`registro\`)  
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4\_general\_ci;
+CREATE TABLE IF NOT EXISTS `inventory` (
+  `registro` int(11) NOT NULL,
+  `codigo` varchar(100) DEFAULT NULL,
+  `titulo` text NOT NULL,
+  `autor` varchar(255) DEFAULT NULL,
+  `biblioteca` varchar(100) DEFAULT NULL,
+  `tipo` varchar(50) DEFAULT NULL,
+  `procedencia` varchar(50) DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,
+  `estado` varchar(20) DEFAULT 'Disponible',
+  PRIMARY KEY (`registro`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE IF NOT EXISTS \`reserved\_books\` (  
-  \`id\` int(11) NOT NULL AUTO\_INCREMENT,  
-  \`user\_uuid\` char(36) NOT NULL COMMENT 'UUID proveniente del auth-service',  
-  \`codigo\` varchar(100) NOT NULL,  
-  \`registro\` int(11) NOT NULL COMMENT 'Registro del ejemplar físico',  
-  \`estado\` varchar(50) DEFAULT 'Pendiente',  
-  \`fecha\_reserva\` datetime DEFAULT current\_timestamp(),  
-  PRIMARY KEY (\`id\`),  
-  UNIQUE KEY \`unique\_user\_reserved\` (\`user\_uuid\`,\`registro\`)  
-) ENGINE=InnoDB AUTO\_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4\_general\_ci;
+CREATE TABLE IF NOT EXISTS `reserved_books` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_uuid` char(36) NOT NULL COMMENT 'UUID proveniente del auth-service',
+  `codigo` varchar(100) NOT NULL,
+  `registro` int(11) NOT NULL COMMENT 'Registro del ejemplar físico',
+  `estado` varchar(50) DEFAULT 'Pendiente',
+  `fecha_reserva` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_user_reserved` (`user_uuid`,`registro`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE IF NOT EXISTS \`saved\_books\` (  
-  \`id\` int(11) NOT NULL AUTO\_INCREMENT,  
-  \`user\_uuid\` char(36) NOT NULL COMMENT 'UUID proveniente del auth-service',  
-  \`codigo\` varchar(100) NOT NULL COMMENT 'Código del libro general',  
-  \`origen\` varchar(50) DEFAULT NULL,  
-  \`titulo\` varchar(255) DEFAULT NULL,  
-  \`portada\_url\` varchar(500) DEFAULT NULL,  
-  \`fecha\_guardado\` datetime DEFAULT current\_timestamp(),  
-  PRIMARY KEY (\`id\`),  
-  UNIQUE KEY \`unique\_user\_saved\` (\`user\_uuid\`,\`codigo\`,\`origen\`)  
-) ENGINE=InnoDB AUTO\_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4\_general\_ci;
+CREATE TABLE IF NOT EXISTS `saved_books` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_uuid` char(36) NOT NULL COMMENT 'UUID proveniente del auth-service',
+  `codigo` varchar(100) NOT NULL COMMENT 'Código del libro general',
+  `origen` varchar(50) DEFAULT NULL,
+  `titulo` varchar(255) DEFAULT NULL,
+  `portada_url` varchar(500) DEFAULT NULL,
+  `fecha_guardado` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_user_saved` (`user_uuid`,`codigo`,`origen`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `collections` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_uuid` char(36) NOT NULL COMMENT 'UUID del dueño de la colección',
+  `name` varchar(150) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_user_collections` (`user_uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `collection_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `collection_id` int(11) NOT NULL,
+  `saved_book_id` int(11) NOT NULL COMMENT 'Apunta al id de saved_books',
+  `added_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_collection_book` (`collection_id`,`saved_book_id`),
+  KEY `idx_collection_id` (`collection_id`),
+  KEY `idx_saved_book_id` (`saved_book_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+```
 
 ## **2.3. Lenguaje de Manipulación de Datos (DML)** {#2.3.-lenguaje-de-manipulación-de-datos-(dml)}
 
-\-- \=========================================================================  
-\-- 1\. INSERT (Inserción de datos en las tablas)  
-\-- \=========================================================================
+```sql
+-- =========================================================================
+-- 2.3. Lenguaje de Manipulación de Datos (DML)
+-- =========================================================================
 
-\-- Inserción de usuarios en la tabla 'accounts' (Realizado por auth-service)  
-\-- Nota: Las contraseñas están representadas con hashes simulados tipo BCrypt  
-INSERT INTO \`accounts\` (\`uuid\`, \`name\`, \`email\`, \`password\`, \`role\`, \`status\`, \`verification\_token\`) VALUES  
-('e3b0c442-98fc-11eb-a8b3-0242ac130003', 'Leandro Diego Hurtado Ortiz', 'lhurtadoo@upt.pe', '$2y$10$MzEyMDUyMzg0TmV4dXNMaWJVUFQye...', 'user', 'active', NULL),  
-('f4c1d553-99fd-12ec-b9c4-0353bd241114', 'Administrador General Biblioteca', 'admin\_biblioteca@upt.pe', '$2y$10$QWRtaW5OZXh1c0xpYlVQVDIwMjZ...', 'admin', 'active', NULL),  
-('a1b2c3d4-1234-5678-90ab-cdef12345678', 'Juan Perez Gomez', 'jperezg@upt.pe', '$2y$10$VGVzdFBhc3N3b3JkTmV4dXNMaWI...', 'user', 'inactive', 'token\_v4\_xyz123');
+-- =========================================================================
+-- 1. INSERT (Inserción de datos en las tablas)
+-- =========================================================================
 
-\-- Inserción de catálogo físico en la tabla 'inventory' (Carga inicial / Control de stock)  
-INSERT INTO \`inventory\` (\`registro\`, \`codigo\`, \`titulo\`, \`autor\`, \`biblioteca\`, \`tipo\`, \`procedencia\`, \`fecha\`, \`estado\`) VALUES  
-(10521, 'INF-452', 'Introducción a la Arquitectura de Microservicios', 'Martin Fowler', 'Central UPT', 'Libro', 'Compra Directa', '2026-02-15 09:30:00', 'Disponible'),  
-(10522, 'INF-452', 'Introducción a la Arquitectura de Microservicios', 'Martin Fowler', 'Central UPT', 'Libro', 'Compra Directa', '2026-02-15 09:30:00', 'Prestado'),  
+-- Inserción de usuarios en la tabla 'accounts' (Realizado por auth-service)
+-- Nota: Las contraseñas están representadas con hashes simulados tipo BCrypt
+INSERT INTO `accounts` (`uuid`, `name`, `email`, `password`, `role`, `status`, `verification_token`) VALUES
+('e3b0c442-98fc-11eb-a8b3-0242ac130003', 'Leandro Diego Hurtado Ortiz', 'lhurtadoo@upt.pe', '$2y$10$MzEyMDUyMzg0TmV4dXNMaWJVUFQye...', 'user', 'active', NULL),
+('f4c1d553-99fd-12ec-b9c4-0353bd241114', 'Administrador General Biblioteca', 'admin_biblioteca@upt.pe', '$2y$10$QWRtaW5OZXh1c0xpYlVQVDIwMjZ...', 'admin', 'active', NULL),
+('a1b2c3d4-1234-5678-90ab-cdef12345678', 'Juan Perez Gomez', 'jperezg@upt.pe', '$2y$10$VGVzdFBhc3N3b3JkTmV4dXNMaWI...', 'user', 'inactive', 'token_v4_xyz123');
+
+-- Inserción de catálogo físico en la tabla 'inventory' (Carga inicial / Control de stock)
+INSERT INTO `inventory` (`registro`, `codigo`, `titulo`, `autor`, `biblioteca`, `tipo`, `procedencia`, `fecha`, `estado`) VALUES
+(10521, 'INF-452', 'Introducción a la Arquitectura de Microservicios', 'Martin Fowler', 'Central UPT', 'Libro', 'Compra Directa', '2026-02-15 09:30:00', 'Disponible'),
+(10522, 'INF-452', 'Introducción a la Arquitectura de Microservicios', 'Martin Fowler', 'Central UPT', 'Libro', 'Compra Directa', '2026-02-15 09:30:00', 'Prestado'),
 (20145, 'TES-881', 'Diseño de un API Gateway distribuido empleando PHP', 'Hurtado, L.', 'FAING', 'Tesis', 'Donación', '2026-05-10 14:15:00', 'Disponible');
 
-\-- Inserción de favoritos en la tabla 'saved\_books' (Realizado por user-library-service)  
-\-- Nota: Almacena recursos físicos de la UPT y recursos digitales de scrapers (Alpha/e-Libro)  
-INSERT INTO \`saved\_books\` (\`user\_uuid\`, \`codigo\`, \`origen\`, \`titulo\`, \`portada\_url\`) VALUES  
-('e3b0c442-98fc-11eb-a8b3-0242ac130003', 'INF-452', 'Inventario UPT', 'Introducción a la Arquitectura de Microservicios', 'http://localhost/nexuslib/covers/inf452.jpg'),  
-('e3b0c442-98fc-11eb-a8b3-0242ac130003', 'alpha-9921', 'Alpha Cloud', 'Desarrollo de Software Seguro en la Nube', 'https://alpha.cloud/covers/9921.png'),  
-('a1b2c3d4-1234-5678-90ab-cdef12345678', 'elibro-4412', 'e-Libro', 'Ingeniería de Requisitos Avanzada', 'https://elibro.net/covers/4412.jpg');
+-- Inserción de favoritos en la tabla 'saved_books' (Realizado por user-library-service)
+-- Nota: Almacena recursos físicos de la UPT y recursos digitales de scrapers (Alpha/e-Libro)
+INSERT INTO `saved_books` (`id`, `user_uuid`, `codigo`, `origen`, `titulo`, `portada_url`) VALUES
+(1, 'e3b0c442-98fc-11eb-a8b3-0242ac130003', 'INF-452', 'Inventario UPT', 'Introducción a la Arquitectura de Microservicios', 'http://localhost/nexuslib/covers/inf452.jpg'),
+(2, 'e3b0c442-98fc-11eb-a8b3-0242ac130003', 'alpha-9921', 'Alpha Cloud', 'Desarrollo de Software Seguro en la Nube', '[https://alpha.cloud/covers/9921.png](https://alpha.cloud/covers/9921.png)'),
+(3, 'a1b2c3d4-1234-5678-90ab-cdef12345678', 'elibro-4412', 'e-Libro', 'Ingeniería de Requisitos Avanzada', '[https://elibro.net/covers/4412.jpg](https://elibro.net/covers/4412.jpg)');
 
-\-- Inserción de apartados en la tabla 'reserved\_books' (Realizado por user-library-service)  
-INSERT INTO \`reserved\_books\` (\`user\_uuid\`, \`codigo\`, \`registro\`, \`estado\`) VALUES  
+-- Inserción de apartados en la tabla 'reserved_books' (Realizado por user-library-service)
+INSERT INTO `reserved_books` (`user_uuid`, `codigo`, `registro`, `estado`) VALUES
 ('e3b0c442-98fc-11eb-a8b3-0242ac130003', 'INF-452', 10522, 'Pendiente');
 
-\-- \=========================================================================  
-\-- 2\. SELECT (Consultas de datos en las tablas)  
-\-- \=========================================================================
+-- Inserción de carpetas de colecciones (Realizado por user-library-service)
+INSERT INTO `collections` (`id`, `user_uuid`, `name`) VALUES
+(1, 'e3b0c442-98fc-11eb-a8b3-0242ac130003', 'Sistemas Distribuidos'),
+(2, 'e3b0c442-98fc-11eb-a8b3-0242ac130003', 'Proyecto de Tesis');
 
-\-- Consultar la información de perfil de un usuario por su Email (Para el Login)  
-SELECT \`id\_user\`, \`uuid\`, \`name\`, \`password\`, \`role\`, \`status\`   
-FROM \`accounts\`   
-WHERE \`email\` \= 'lhurtadoo@upt.pe';
+-- Inserción de ítems para asociar favoritos dentro de carpetas (Realizado por user-library-service)
+INSERT INTO `collection_items` (`collection_id`, `saved_book_id`) VALUES
+(1, 1), -- Enlaza 'Introducción a la Arquitectura de Microservicios' a la carpeta 'Sistemas Distribuidos'
+(1, 2), -- Enlaza 'Desarrollo de Software Seguro en la Nube' a la carpeta 'Sistemas Distribuidos'
+(2, 1); -- Enlaza 'Introducción a la Arquitectura de Microservicios' a la carpeta 'Proyecto de Tesis'
 
-\-- Consultar los libros guardados/favoritos de un usuario específico mediante su UUID  
-\-- (Usado para renderizar la biblioteca personalizada en el Dashboard del Alumno)  
-SELECT \`id\`, \`codigo\`, \`origen\`, \`titulo\`, \`portada\_url\`, \`fecha\_guardado\`  
-FROM \`saved\_books\`  
-WHERE \`user\_uuid\` \= 'e3b0c442-98fc-11eb-a8b3-0242ac130003'  
-ORDER BY \`fecha\_guardado\` DESC;
 
-\-- Consultar la lista de reservas activas mostrando los datos del libro físico asociado  
-\-- (Consulta lógica simulada mediante JOIN para auditoría o reportes administrativos)  
-SELECT rb.\`id\` AS 'ID Reserva', acc.\`name\` AS 'Alumno', inv.\`titulo\` AS 'Libro', rb.\`registro\` AS 'Copia Nro', rb.\`estado\`, rb.\`fecha\_reserva\`  
-FROM \`reserved\_books\` rb  
-JOIN \`accounts\` acc ON rb.\`user\_uuid\` \= acc.\`uuid\`  
-JOIN \`inventory\` inv ON rb.\`registro\` \= inv.\`registro\`;
+-- =========================================================================
+-- 2. SELECT (Consultas de datos en las tablas)
+-- =========================================================================
 
-\-- Verificar la disponibilidad de un ejemplar físico específico en el almacén  
-SELECT \`registro\`, \`codigo\`, \`titulo\`, \`estado\`   
-FROM \`inventory\`   
-WHERE \`registro\` \= 10522;
+-- Consultar la información de perfil de un usuario por su Email (Para el Login)
+SELECT `id_user`, `uuid`, `name`, `password`, `role`, `status` 
+FROM `accounts` 
+WHERE `email` = 'lhurtadoo@upt.pe';
 
-\-- \=========================================================================  
-\-- 3\. UPDATE (Actualizar datos en las tablas)  
-\-- \=========================================================================
+-- Consultar los libros guardados/favoritos de un usuario específico mediante su UUID
+-- (Usado para renderizar la biblioteca personalizada en el Dashboard del Alumno)
+SELECT `id`, `codigo`, `origen`, `titulo`, `portada_url`, `fecha_guardado`
+FROM `saved_books`
+WHERE `user_uuid` = 'e3b0c442-98fc-11eb-a8b3-0242ac130003'
+ORDER BY `fecha_guardado` DESC;
 
-\-- Activar una cuenta de usuario y limpiar el token (Cuando confirma el enlace en su correo)  
-UPDATE \`accounts\`   
-SET \`status\` \= 'active', \`verification\_token\` \= NULL   
-WHERE \`verification\_token\` \= 'token\_v4\_xyz123';
+-- Consultar la lista de reservas activas mostrando los datos del libro físico asociado
+-- (Consulta lógica simulada mediante JOIN para auditoría o reportes administrativos)
+SELECT rb.`id` AS 'ID Reserva', acc.`name` AS 'Alumno', inv.`titulo` AS 'Libro', rb.`registro` AS 'Copia Nro', rb.`estado`, rb.`fecha_reserva`
+FROM `reserved_books` rb
+JOIN `accounts` acc ON rb.`user_uuid` = acc.`uuid`
+JOIN `inventory` inv ON rb.`registro` = inv.`registro`;
 
-\-- Cambiar el estado de un ejemplar en el inventario (Cuando se procesa una reserva)  
-\-- (Disparado internamente mediante la ruta /internal/sync-state)  
-UPDATE \`inventory\`   
-SET \`estado\` \= 'Prestado'   
-WHERE \`registro\` \= 10522;
+-- Verificar la disponibilidad de un ejemplar físico específico en el almacén
+SELECT `registro`, `codigo`, `titulo`, `estado` 
+FROM `inventory` 
+WHERE `registro` = 10522;
 
-\-- Actualizar el estado de la reserva cuando el administrador entrega el libro físico  
-UPDATE \`reserved\_books\`   
-SET \`estado\` \= 'Entregado'   
-WHERE \`user\_uuid\` \= 'e3b0c442-98fc-11eb-a8b3-0242ac130003' AND \`registro\` \= 10522;
+-- Consultar todas las carpetas organizacionales creadas por un usuario específico
+SELECT `id`, `name`, `created_at`
+FROM `collections`
+WHERE `user_uuid` = 'e3b0c442-98fc-11eb-a8b3-0242ac130003'
+ORDER BY `name` ASC;
 
-\-- \=========================================================================  
-\-- 4\. DELETE (Eliminar datos de las tablas)  
-\-- \=========================================================================
+-- Recuperar y renderizar los libros guardados contenidos dentro de una carpeta específica (Uso de JOIN)
+SELECT ci.`id` AS 'Item ID', sb.`titulo`, sb.`origen`, sb.`portada_url`, ci.`added_at`
+FROM `collection_items` ci
+JOIN `saved_books` sb ON ci.`saved_book_id` = sb.`id`
+WHERE ci.`collection_id` = 1
+ORDER BY ci.`added_at` DESC;
 
-\-- Eliminar un libro de la colección de favoritos (Cuando el usuario presiona "Quitar de favoritos")  
-DELETE FROM \`saved\_books\`   
-WHERE \`user\_uuid\` \= 'e3b0c442-98fc-11eb-a8b3-0242ac130003' AND \`codigo\` \= 'alpha-9921' AND \`origen\` \= 'Alpha Cloud';
 
-\-- Cancelar y remover una solicitud de reserva del sistema  
-DELETE FROM \`reserved\_books\`   
-WHERE \`id\` \= 1;
+-- =========================================================================
+-- 3. UPDATE (Actualizar datos en las tablas)
+-- =========================================================================
+
+-- Activar una cuenta de usuario y limpiar el token (Cuando confirma el enlace en su correo)
+UPDATE `accounts` 
+SET `status` = 'active', `verification_token` = NULL 
+WHERE `verification_token` = 'token_v4_xyz123';
+
+-- Cambiar el estado de un ejemplar en el inventario (Cuando se procesa una reserva)
+-- (Disparado internamente mediante la ruta /internal/sync-state)
+UPDATE `inventory` 
+SET `estado` = 'Prestado' 
+WHERE `registro` = 10522;
+
+-- Actualizar el estado de la reserva cuando el administrador entrega el libro físico
+UPDATE `reserved_books` 
+SET `estado` = 'Entregado' 
+WHERE `user_uuid` = 'e3b0c442-98fc-11eb-a8b3-0242ac130003' AND `registro` = 10522;
+
+-- Renombrar una carpeta de colección desde el modal del Dashboard del usuario
+UPDATE `collections`
+SET `name` = 'Arquitecturas de Software'
+WHERE `id` = 1 AND `user_uuid` = 'e3b0c442-98fc-11eb-a8b3-0242ac130003';
+
+
+-- =========================================================================
+-- 4. DELETE (Eliminar datos de las tablas)
+-- =========================================================================
+
+-- Eliminar un libro de la colección de favoritos (Cuando el usuario presiona "Quitar de favoritos")
+DELETE FROM `saved_books` 
+WHERE `user_uuid` = 'e3b0c442-98fc-11eb-a8b3-0242ac130003' AND `codigo` = 'alpha-9921' AND `origen` = 'Alpha Cloud';
+
+-- Cancelar y remover una solicitud de reserva del sistema
+DELETE FROM `reserved_books` 
+WHERE `id` = 1;
+
+-- Desvincular un libro guardado específico de una carpeta de colección (Remover ítem)
+DELETE FROM `collection_items`
+WHERE `collection_id` = 1 AND `saved_book_id` = 1;
+
+-- Eliminar una carpeta de colección personalizada completa
+DELETE FROM `collections`
+WHERE `id` = 2 AND `user_uuid` = 'e3b0c442-98fc-11eb-a8b3-0242ac130003';
+
+-- Limpieza relacional automática (Garantiza consistencia borrando enlaces huérfanos)
+DELETE FROM `collection_items`
+WHERE `saved_book_id` NOT IN (SELECT `id` FROM `saved_books`);
+```
 
