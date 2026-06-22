@@ -25,7 +25,7 @@ Integrantes:
 
 # 
 
-# **Versión *3.0***
+# **Versión *4.0***
 
 | CONTROL DE VERSIONES |  |  |  |  |  |
 | :---: | :---: | :---: | :---: | :---: | ----- |
@@ -33,6 +33,7 @@ Integrantes:
 | 1.0 | LDHO | LDHO | LDHO | 02/04/2026 | Versión Original |
 | 2.0 | LDHO | LDHO | LDHO | 17/04/2026 | Versión 2.0 |
 | 3.0 | LDHO | LDHO | LDHO | 08/06/2026 | Versión 3.0 |
+| 4.0 | LDHO | LDHO | LDHO | 22/06/2026 | Versión 4.0 |
 
 **ÍNDICE GENERAL**
 
@@ -105,7 +106,7 @@ Fin: 24 de junio
 
 ## **1.3 Descripción** {#1.3-descripción}
 
-El proyecto consiste en el diseño y desarrollo de una plataforma web de acceso unificado orientada a centralizar y simplificar el descubrimiento de recursos bibliográficos para la comunidad académica de la Universidad Privada de Tacna. El sistema funciona como un meta-buscador híbrido que integra tres pilares estratégicos: la base de datos local de la biblioteca física de la UPT, el catálogo digital especializado de Alpha Cloud y la extensa colección académica de E-Libro, lo que permite una cobertura mucho más amplia y categorizada.  La solución optimiza la investigación académica al proporcionar, en una sola interfaz, la consulta simultánea de la disponibilidad de textos en estanterías físicas y el acceso directo a recursos electrónicos validados de alta calidad. El sistema se basa en una arquitectura de servicios distribuidos que orquesta la recuperación de metadatos desde repositorios institucionales y externos para ofrecer un catálogo enriquecido. Para su implementación, se utiliza el lenguaje PHP 8.2.12 y MySQL para la persistencia de datos, empleando Terraform para la gestión de infraestructura como código (IaC) sobre Microsoft Azure.
+El proyecto consiste en el diseño y desarrollo de una plataforma web de acceso unificado orientada a centralizar y simplificar el descubrimiento de recursos bibliográficos para la comunidad académica de la Universidad Privada de Tacna. El sistema funciona como un meta-buscador híbrido que integra tres pilares estratégicos: la base de datos local de la biblioteca física de la UPT, el catálogo digital especializado de Alpha Cloud y la extensa colección académica de E-Libro, lo que permite una cobertura mucho más amplia y categorizada. La solución optimiza la investigación académica al proporcionar, en una sola interfaz, la consulta simultánea de la disponibilidad de textos en estanterías físicas y el acceso directo a recursos electrónicos validados de alta calidad. El sistema se basa en una arquitectura de servicios distribuidos que orquesta la recuperación de metadatos desde repositorios institucionales y externos para ofrecer un catálogo enriquecido. Para su implementación, se utiliza el lenguaje PHP 8.2.12 y MySQL para la persistencia de datos, desplegados sobre una Máquina Virtual dedicada en Microsoft Azure ejecutando el sistema operativo Windows Server 2025 Datacenter. El entorno se administra de manera continua mediante los servicios locales de Apache y MySQL activos en la suite XAMPP, exponiendo la plataforma de forma permanente hacia internet a través de una etiqueta DNS pública para garantizar su completa disponibilidad operativa. 
 
 ## **1.4 Objetivos** {#1.4-objetivos}
 
@@ -118,7 +119,7 @@ El proyecto consiste en el diseño y desarrollo de una plataforma web de acceso 
 * Diseñar e implementar un sistema de búsqueda multicanal que permita filtrar resultados por título, autor y categoría, unificando la consulta de recursos físicos y virtuales en una sola interfaz.    
 * Integrar la base de datos local de la biblioteca de la UPT para permitir a los usuarios visualizar la disponibilidad de los textos físicos en estantería en tiempo real.    
 * Vincular los catálogos digitales de Alpha Cloud y E-Libro para expandir significativamente la oferta bibliográfica y garantizar el acceso a una mayor variedad de categorías académicas.    
-* Configurar la infraestructura como código (IaC) mediante Terraform para automatizar el despliegue de los servicios en Microsoft Azure y gestionar con precisión los costos operativos.    
+* Configurar y optimizar un servidor dedicado en la nube mediante una Máquina Virtual en Microsoft Azure para albergar los servicios web y la persistencia de datos bajo un entorno unificado de alta disponibilidad.  
 * Garantizar la escalabilidad de la arquitectura, facilitando la futura incorporación de bases de datos de otras facultades o repositorios institucionales adicionales. 
 
 # **2\. Riesgos** {#2.-riesgos}
@@ -127,7 +128,7 @@ El proyecto consiste en el diseño y desarrollo de una plataforma web de acceso 
 * **Interrupción o Latencia de APIs Externas:** Al depender de las plataformas Alpha Cloud y E-Libro, el sistema queda sujeto a la disponibilidad técnica de estos proveedores; cualquier caída en sus servicios o lentitud en sus tiempos de respuesta afectará directamente la experiencia de búsqueda unificada.  
 * **Inconsistencia en la Consolidación de Metadatos:** La integración de tres fuentes distintas (UPT, Alpha Cloud y E-Libro) aumenta el riesgo de encontrar registros duplicados o formatos de metadatos incompatibles, lo que podría complicar la visualización homogénea de los recursos.  
 * **Limitación de Créditos en la Nube:** Al utilizar Microsoft Azure para el despliegue, persiste el riesgo de agotar la cuota de créditos de estudiante antes de completar las pruebas de rendimiento, afectando la disponibilidad operativa a largo plazo.  
-* **Gestión de Infraestructura como Código:** El uso de Terraform requiere una configuración extremadamente precisa; errores en los scripts de automatización podrían derivar en fallos en la provisión de recursos en la nube o estimaciones de costos erróneas
+* **Dependencia de un Punto Único de Fallo (Single Point of Failure):** Al estar alojados tanto el servidor Apache (Frontend/Backend) como el motor MySQL dentro de la misma Máquina Virtual, cualquier sobrecarga en los recursos de procesamiento, caída del sistema operativo Windows Server o detención inesperada del servicio XAMPP interrumpirá por completo la disponibilidad pública de la plataforma NexusLib.
 
 # **3\. Análisis de la situación actual** {#3.-análisis-de-la-situación-actual}
 
@@ -142,16 +143,16 @@ Hardware:
 
 * **CPU:** 2 vCPU mínimo  
 * **Memoria RAM**: 4 GB  
-* **Almacenamiento:** Unidad SSD para garantizar la eficiencia en la persistencia de datos de MySQL, logs de transacciones e historiales de búsqueda.
+* **Almacenamiento:** Almacenamiento SSD para garantizar la máxima eficiencia en la persistencia de datos de MySQL, control de logs de transacciones e historiales de búsqueda híbrida.
 
 Software:
 
 * **Entorno de Desarrollo:** Visual Studio Code (configurado con extensiones para PHP 8.2.12 y validación de sintaxis).  
-* **Servidor Local:** XAMPP (Apache para el servidor web y motor de base de datos MySQL).   
+* **Servidor de Despliegue (Local y Producción):** XAMPP ejecutado de forma unificada (Servicio web Apache y motor de base de datos MySQL activos continuamente).  
 * **Motor de Base de Datos:** MySQL (Gestionado con HeidiSQL para la administración de tablas y relaciones).  
 * **Arquitectura de Servicios:** Integración multicanal con Alpha Cloud, E-Libro y la base de datos local de la UPT para la recuperación y unificación automatizada de recursos bibliográficos.  
-* **Nube:** Azure App Service y Azure Database for MySQL.  
-* **Infraestructura como Código:** Terraform v1.x (para el aprovisionamiento de recursos en la nube y análisis económico).  
+* **Plataforma en la Nube:** Microsoft Azure (Virtual Machine Instance \- Región Canada Central).  
+* **Sistema Operativo del Servidor:** Windows Server 2025 Datacenter.  
 * **Gestión de Versiones:** GitHub (Integración con Wikis, Projects y Actions).
 
 # **4\. Estudio de Factibilidad** {#4.-estudio-de-factibilidad}
@@ -164,8 +165,8 @@ La viabilidad técnica se sustenta en los siguientes pilares:
 
 * **Dominio del Stack Tecnológico:** El equipo posee experiencia en el desarrollo web con PHP 8.2.12 y el uso de Visual Studio Code, facilitando la creación de una lógica de negocio distribuida para la búsqueda de recursos.  
 * **Arquitectura de Microservicios:** Se implementará una estructura que unifica el acceso a Alpha Cloud, E-Libro y la base de datos local de la UPT, asegurando un procesamiento eficiente de consultas híbridas mediante microservicios que integran estos catálogos de manera transparente.  
-* **Gestión de Base de Datos:** Se utilizará MySQL (gestionado mediante HeidiSQL) para la administración de inventarios locales, asegurando una integración fluida con los servicios de Azure Database for MySQL para la persistencia en la nube.  
-* **Infraestructura y Automatización:** El uso de Microsoft Azure proporciona la escalabilidad necesaria para el almacenamiento de archivos, mientras que Terraform permite gestionar dicha infraestructura mediante código, minimizando errores de configuración manual.  
+* **Gestión de Base de Datos:** Se utiliza MySQL local dentro del servidor en la nube, administrado remotamente mediante HeidiSQL, lo que permite un control directo sobre las tablas de favoritos, usuarios y reservas sin intermediarios.  
+* **Infraestructura y Despliegue:** El uso de una Máquina Virtual dedicada en Microsoft Azure proporciona la capacidad de cómputo necesaria (2 vCPU y 4 GB RAM) para mantener el software Apache corriendo continuamente, exponiendo el puerto 80 hacia internet mediante una dirección IP y etiqueta DNS pública asignada por Azure.  
 * **Control de Versiones y Calidad:** La integración con GitHub permite un seguimiento riguroso del avance del proyecto y facilita la implementación de pruebas de aseguramiento de calidad (QA) en cada componente del sistema distribuido.
 
 La estructura modular y distribuida del sistema asegura que la plataforma pueda escalar y adaptarse con facilidad, permitiendo integrar nuevas fuentes de datos bibliográficos en el futuro sin afectar la disponibilidad de los servicios actuales.
@@ -176,14 +177,16 @@ Este apartado evalúa la inversión necesaria para el desarrollo y puesta en mar
 
 ### **4.2.1 Costos de software** {#4.2.1-costos-de-software}
 
+Incluye las herramientas digitales y servicios de infraestructura en la nube proyectados. Como indica la rúbrica, los costos de Azure se basan en el análisis técnico de la Máquina Virtual y su entorno XAMPP.
+
+### 
+
 | N° | Descripción | Precio Unitario (S/.) | Tiempo | Costo (S/.) |
 | :---- | :---- | :---- | :---- | :---- |
-| 1 | Azure Database for MySQL | 220 | 3 meses | 660 |
-| 2 | Azure App Service Plan (Linux/PHP) | 170 | 3 meses | 510 |
-| 4 | Certificado SSL / Dominio | 150 | 1 año | 150 |
+| 1 | Azure VM (Standard B2als v2 \- 2 vCPU, 4 GB RAM) \+ Licencia Windows Server | 310 | 3 meses | 930 |
+| 2 | Almacenamiento Azure Estándar SSD (64 GB) \+ Tráfico de Red (Egress) | 80 | 3 meses | 240 |
+| 3 | Certificado SSL / Gestión de Dominio Web | 150 | 1 año | 150 |
 | **Total** |  |  |  | **1,320** |
-
-Incluye las herramientas digitales y servicios de infraestructura en la nube proyectados. Como indica la rúbrica, los costos de Azure se basan en el análisis técnico de Terraform.
 
 ### **4.2.2 Costos de recursos humanos** {#4.2.2-costos-de-recursos-humanos}
 
@@ -259,7 +262,7 @@ El sistema es ambientalmente factible, ya que su implementación promueve práct
 
 ## **5.1 Justificación de la Inversión** {#5.1-justificación-de-la-inversión}
 
-La contribución al desarrollo de una plataforma unificada para identificar y monitorear el acceso a recursos bibliográficos físicos y virtuales responde a la creciente necesidad de modernizar la infraestructura de investigación académica. Al proporcionar recursos financieros a esta iniciativa, se busca reemplazar los métodos tradicionales de búsqueda manual y catálogos fragmentados que no fomentan experiencias interactivas que integren la teoría y la práctica en un solo entorno digital.Esto facilitará la adopción de hábitos de investigación eficientes para estudiantes y docentes, de acuerdo con los objetivos estratégicos de transformación digital para la educación superior. Además, la integración de la infraestructura como código mediante Terraform añade un valor significativo al proyecto, potenciando la transparencia en el gasto de nube y mejorando el rendimiento técnico y social de la inversión inicial.
+La contribución al desarrollo de una plataforma unificada para identificar y monitorear el acceso a recursos bibliográficos físicos y virtuales responde a la creciente necesidad de modernizar la infraestructura de investigación académica. Al proporcionar recursos financieros a esta iniciativa, se busca reemplazar los métodos tradicionales de búsqueda manual y catálogos fragmentados que no fomentan experiencias interactivas que integren la teoría y la práctica en un solo entorno digital. Esto facilitará la adopción de hábitos de investigación eficientes para estudiantes y docentes, de acuerdo con los objetivos estratégicos de transformación digital para la educación superior. Además, la implementación de un servidor dedicado en la nube mediante una Máquina Virtual de Azure añade un valor definitivo al proyecto, potenciando el control directo de los servicios y mejorando el rendimiento técnico y operativo de la inversión inicial.
 
 ### **5.1.1. Beneficios del proyecto** {#5.1.1.-beneficios-del-proyecto}
 
@@ -267,7 +270,7 @@ La contribución al desarrollo de una plataforma unificada para identificar y mo
 
 * **Reducción de costos operativos**: La plataforma digital permite disminuir los gastos en materiales de oficina y fotocopias al integrar el monitoreo y la consulta de recursos en un entorno virtual centralizado.  
 * **Optimización de recursos físicos**: Las operaciones de búsqueda y gestión automatizadas eliminan la necesidad de catálogos impresos, reduciendo el consumo de papel y otros insumos administrativos de la biblioteca.  
-* **Ahorro en infraestructura TI**: Al implementar una solución en la nube con Azure y Terraform, la institución evita grandes inversiones iniciales en servidores físicos locales, pagando únicamente por los recursos computacionales que realmente utiliza.  
+* **Ahorro en infraestructura TI**: Al implementar una solución en la nube con una Máquina Virtual de Azure, la institución evita grandes inversiones iniciales en servidores físicos locales, pagando únicamente por los recursos computacionales que realmente utiliza.  
 * **Eficiencia en la gestión del tiempo**: La automatización de la disponibilidad de libros y acceso a PDFs libera la carga administrativa del personal bibliotecario, permitiendo una mejor distribución del talento humano en tareas de asesoría académica.
 
 #### **5.1.1.2 Beneficios intangibles**
@@ -326,6 +329,7 @@ La TIR del 17% demuestra que la rentabilidad propia del proyecto es significativ
 * El proyecto del Sistema NexusLib demuestra ser plenamente factible en todos los aspectos evaluados: técnico, económico, operativo, legal, social y ambiental.  
 * La propuesta tecnológica, basada en una arquitectura de microservicios que integra de manera unificada la base de datos local de la UPT, Alpha Cloud y E-Libro, garantiza una solución robusta y escalable empleando PHP 8.2.12, MySQL e infraestructura en Azure.  
 * El análisis financiero respalda la inversión con indicadores positivos, destacando un VAN de S/ 4,199.12 y una relación Beneficio/Costo de 1.44, lo que asegura la rentabilidad del sistema bajo el nuevo modelo de desarrollo distribuido.  
-* La optimización del presupuesto, al utilizar herramientas de código abierto como Visual Studio Code y HeidiSQL, permite una gestión eficiente de los recursos institucionales, priorizando la inversión en infraestructura de nube gestionada por Terraform y el talento humano.  
+* La optimización del presupuesto, al utilizar herramientas de código abierto como Visual Studio Code y HeidiSQL, permite una gestión eficiente de los recursos institucionales, priorizando la inversión en la infraestructura del servidor dedicado en la nube y el talento humano.  
 * El sistema representa una oportunidad real de modernización académica, permitiendo a estudiantes y docentes acceder de manera eficiente a la totalidad de la oferta bibliográfica de la institución mediante la unificación de catálogos físicos y digitales en una sola interfaz.  
 * En conjunto, el proyecto se presenta como una solución tecnológica sólida con un alto impacto social y educativo, alineada con las metas de transformación digital de la facultad y las exigencias técnicas actuales.
+
