@@ -12,6 +12,13 @@ La plataforma se encuentra completamente publicada, operativa y disponible para 
 
 ---
 
+## 🎥 Presentación y Exposición del Proyecto
+
+- 📺 **[Video de la Exposición en Google Drive](https://drive.google.com/file/d/10lZxuET1zOMIrFixaykC8kgbuQAZa57a/view?usp=sharing)**
+- 📄 **[Diapositivas de la Presentación (Código Marp)](./Presentación%20del%20Proyecto%20en%20MARP/presentacion.md)**
+
+---
+
 ## 🛡️ Análisis Estático y Despliegue Seguro (DevSecOps)
 
 Para dar cumplimiento con las normativas de desarrollo seguro y asegurar la calidad del código fuente frente a bugs o vulnerabilidades de inyección, el repositorio tiene integrados flujos de trabajo (*Pipelines*) mediante **GitHub Actions**.
