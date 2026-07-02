@@ -14,7 +14,7 @@ La plataforma se encuentra completamente publicada, operativa y disponible para 
 
 ## 🎥 Presentación y Exposición del Proyecto
 
-- 📺 **[Video de la Exposición en Google Drive](https://drive.google.com/file/d/10lZxuET1zOMIrFixaykC8kgbuQAZa57a/view?usp=sharing)**
+- 📺 **[Video de Presentación del Aplicativo publicado en Youtube](https://www.youtube.com/watch?v=qrx_iZtF65M)**
 - 📄 **[Diapositivas de la Presentación (Código Marp)](./Presentación%20del%20Proyecto%20en%20MARP/presentacion.md)**
 
 ---
